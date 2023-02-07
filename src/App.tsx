@@ -4,39 +4,43 @@ import ReactPaginate from "react-paginate";
 import { DotLoader } from "react-spinners";
 import TableUser from "./components/TableUser";
 import { user } from "./types/user";
+import { listUser } from "./utils/user";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<user[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
-    const fetchUsers = async () => {
+    const getUsers = async () => {
       setLoading(true);
       const response = await axios.get(
-        `https://randomuser.me/api/?page=${currentPage}&results=10`
+        `https://randomuser.me/api/?page=1&results=10`
       );
       if (response) {
         setLoading(false);
         const results = response.data.results;
-        const arrayUsers: user[] = [];
-        results.map((dataUser: any) => {
-          const data: user = {
-            title: dataUser.name.title,
-            first: dataUser.name.first,
-            last: dataUser.name.last,
-            userName: dataUser.login.username,
-            thumbnail: dataUser.picture.thumbnail,
-          };
-          arrayUsers.push(data);
-        });
+        const arrayUsers = listUser(results);
         setUsers(arrayUsers);
       }
     };
-    fetchUsers();
-  }, [currentPage]);
+    getUsers();
+  }, []);
+  const fetchUsers = async (currentPage: number) => {
+    const response = await axios.get(
+      `https://randomuser.me/api/?page=${currentPage}&results=10`
+    );
+    const data = response.data.results;
+    const arrayUsers = listUser(data);
 
-  const handlePageClick = (data: any) => {
-    setCurrentPage(data.selected + 1);
+    return arrayUsers;
+  };
+
+  const handlePageClick = async (data: any) => {
+    let currentPage = data.selected + 1;
+    const users = await fetchUsers(currentPage);
+    if (users) {
+      setUsers(users);
+    }
   };
 
   return (

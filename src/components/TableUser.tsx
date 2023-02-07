@@ -14,10 +14,10 @@ function TableUser(props: Props) {
           <thead>
             <tr className="text-left">
               <th className="border border-slate-300 text-center p-2">
-                Full Name
+                Username
               </th>
               <th className="border border-slate-300 text-center p-2">
-                Username
+                Full Name
               </th>
               <th className="border border-slate-300 text-center p-2">
                 Thumbnail Icon
@@ -28,10 +28,10 @@ function TableUser(props: Props) {
             {users.map((user, index) => (
               <tr key={index}>
                 <td className="border border-slate-300 text-center p-4">
-                  {user.title + "." + user.first + user.last}
+                  {user.userName}
                 </td>
                 <td className="border border-slate-300 text-center p-4">
-                  {user.userName}
+                  {user.title + "." + user.first + user.last}
                 </td>
                 <td className="border border-slate-300 flex justify-center p-4 ">
                   <img src={user.thumbnail} alt="" />
